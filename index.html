@@ -2,7 +2,7 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>奢華風語音記帳</title>
   <style>
     :root {
@@ -14,31 +14,30 @@
     }
 
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-color); margin: 0; padding: 20px; color: var(--text-color); }
-    .container { max-width: 500px; margin: 0 auto; background: #ffffff; padding: 24px; border-radius: 20px; box-shadow: 0 10px 25px rgba(13, 92, 99, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); }
+    body { background-color: var(--bg-color); margin: 0; padding: 16px; color: var(--text-color); }
+    .container { max-width: 480px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(13, 92, 99, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); }
     
-    h2 { text-align: center; margin-top: 0; color: var(--jewel-teal); font-weight: 700; letter-spacing: 1px; }
+    h2 { text-align: center; margin: 0 0 16px 0; color: var(--jewel-teal); font-weight: 700; font-size: 20px; letter-spacing: 1px; }
     
-    .tab-group { display: flex; gap: 10px; margin-bottom: 20px; background: #EFECE6; padding: 5px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #666; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .tab-btn.active { background: var(--jewel-teal); color: #ffffff; box-shadow: 0 4px 10px rgba(13, 92, 99, 0.2); }
+    .tab-group { display: flex; gap: 8px; margin-bottom: 16px; background: #EFECE6; padding: 4px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #666; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active { background: var(--jewel-teal); color: #ffffff; box-shadow: 0 3px 8px rgba(13, 92, 99, 0.2); }
     
-    .card { background: linear-gradient(135deg, var(--amethyst-purple), #31132A); color: #ffffff; padding: 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 15px rgba(74, 32, 64, 0.2); border-left: 5px solid var(--rich-gold); }
-    .card-account { font-size: 14px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
-    .card-total { margin-top: 8px; font-size: 28px; font-weight: bold; color: #FFF; }
+    .card { background: linear-gradient(135deg, var(--amethyst-purple), #31132A); color: #ffffff; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 6px 15px rgba(74, 32, 64, 0.2); border-left: 5px solid var(--rich-gold); }
+    .card-account { font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-total { margin-top: 6px; font-size: 26px; font-weight: bold; color: #FFF; }
     .card-total span { color: var(--rich-gold); }
 
-    .mic-btn { width: 100%; padding: 16px; font-size: 18px; font-weight: bold; color: #ffffff; background: linear-gradient(135deg, var(--rich-gold), #A8833E); border: none; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); transition: 0.3s; }
+    .mic-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; color: #ffffff; background: linear-gradient(135deg, var(--rich-gold), #A8833E); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); transition: 0.3s; }
     .mic-btn.recording { background: #D9534F; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     
-    .status { text-align: center; font-size: 13px; color: #777; min-height: 20px; margin-bottom: 15px; }
+    .status { text-align: center; font-size: 13px; color: #666; min-height: 20px; margin-bottom: 16px; word-break: break-all; }
     
     .list { list-style: none; padding: 0; margin: 0; }
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #EFECE6; }
-    .amount { font-weight: bold; color: var(--amethyst-purple); font-size: 17px; }
-    .delete-btn { color: #BBB; font-size: 14px; cursor: pointer; margin-left: 12px; transition: 0.2s; }
-    .delete-btn:hover { color: #D9534F; }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #EFECE6; }
+    .amount { font-weight: bold; color: var(--amethyst-purple); font-size: 16px; }
+    .delete-btn { color: #BBB; font-size: 14px; cursor: pointer; margin-left: 12px; padding: 4px; }
   </style>
 </head>
 <body>
@@ -60,9 +59,9 @@
     <span id="mic-icon">🎙️</span> <span id="mic-text">點擊開始語音輸入</span>
   </button>
 
-  <div class="status" id="status-text">直接講：「私人 dinner 150」或「Studio 租金 10000」</div>
+  <div class="status" id="status-text">直接講：「私人 dinner 6蚊」或「Studio 租金 10000」</div>
 
-  <h3 style="color: var(--jewel-teal); font-size: 16px; margin-top: 25px;">近期紀錄</h3>
+  <h3 style="color: var(--jewel-teal); font-size: 15px; margin: 20px 0 10px 0;">近期紀錄</h3>
   <ul class="list" id="record-list"></ul>
 </div>
 
@@ -121,25 +120,36 @@
     renderRecords();
   }
 
+  // 中文數字轉阿拉伯數字函數
+  function zhToNum(text) {
+    const zhMap = { '零':0, '一':1, '二':2, '兩':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10 };
+    return text.replace(/[零一二兩三四五六七八九十]/g, m => zhMap[m]);
+  }
+
   function parseSpeechSmart(text) {
     let raw = text.trim();
-    let lower = raw.toLowerCase();
+    // 先將中文數字轉為阿拉伯數字（例如：「六蚊」->「6蚊」）
+    let normalized = zhToNum(raw);
+    let lower = normalized.toLowerCase();
 
+    // 1. 判斷帳戶
     if (/私人|個人|personal|自己|私事/.test(lower)) {
       switchAccount('Personal');
     } else if (/studio|工作室|公事|公司|工作坊/.test(lower)) {
       switchAccount('Studio');
     }
 
-    const numbers = raw.match(/\d+/g);
+    // 2. 提取金額數字
+    const numbers = normalized.match(/\d+/g);
     if (!numbers) {
       document.getElementById('status-text').innerText = `已切換至【${currentAccount}】，但未聽見金額數字`;
       return;
     }
     const amount = parseInt(numbers[numbers.length - 1], 10);
 
-    let itemName = raw
-      .replace(/私人|個人|personal|自己|私事|studio|工作室|公事|公司|新增|支出|記錄|記帳/gi, '')
+    // 3. 過濾關鍵字，提取項目名稱
+    let itemName = normalized
+      .replace(/私人|個人|personal|自己|私事|studio|工作室|公事|公司|新增|支出|記錄|記帳|蚊|塊|元|bucks/gi, '')
       .replace(/\d+/g, '')
       .replace(/[，,。.！!]/g, '')
       .trim();
