@@ -9,6 +9,7 @@
       --jewel-teal: #0D5C63;
       --rich-gold: #C5A059;
       --amethyst-purple: #4A2040;
+      --income-green: #2E7D32;
       --bg-color: #F8F6F0;
       --text-color: #2C2C2C;
     }
@@ -19,14 +20,26 @@
     
     h2 { text-align: center; margin: 0 0 16px 0; color: var(--jewel-teal); font-weight: 700; font-size: 20px; letter-spacing: 1px; }
     
-    .tab-group { display: flex; gap: 8px; margin-bottom: 16px; background: #EFECE6; padding: 4px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #666; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
-    .tab-btn.active { background: var(--jewel-teal); color: #ffffff; box-shadow: 0 3px 8px rgba(13, 92, 99, 0.2); }
+    /* 帳戶分頁 */
+    .account-tab-group { display: flex; gap: 8px; margin-bottom: 12px; background: #EFECE6; padding: 4px; border-radius: 12px; }
+    .account-tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #666; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
+    .account-tab-btn.active { background: var(--jewel-teal); color: #ffffff; box-shadow: 0 3px 8px rgba(13, 92, 99, 0.2); }
+
+    /* 收入 / 支出 類型分頁 */
+    .type-tab-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    .type-tab-btn { flex: 1; padding: 8px; border: 1px solid var(--jewel-teal); background: transparent; color: var(--jewel-teal); border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.3s; }
+    .type-tab-btn.active-expense { background: var(--amethyst-purple); color: #FFF; border-color: var(--amethyst-purple); }
+    .type-tab-btn.active-income { background: var(--income-green); color: #FFF; border-color: var(--income-green); }
     
-    .card { background: linear-gradient(135deg, var(--amethyst-purple), #31132A); color: #ffffff; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 6px 15px rgba(74, 32, 64, 0.2); border-left: 5px solid var(--rich-gold); }
-    .card-account { font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
-    .card-total { margin-top: 6px; font-size: 26px; font-weight: bold; color: #FFF; }
-    .card-total span { color: var(--rich-gold); }
+    /* 總計卡片 (已移除淨結餘) */
+    .card { background: linear-gradient(135deg, var(--amethyst-purple), #31132A); color: #ffffff; padding: 18px 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 6px 15px rgba(74, 32, 64, 0.2); border-left: 5px solid var(--rich-gold); }
+    .card-account { font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .summary-item { text-align: center; background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; }
+    .summary-label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
+    .summary-val { font-size: 18px; font-weight: bold; }
+    .summary-val.income { color: #81C784; }
+    .summary-val.expense { color: #FF8A80; }
 
     .mic-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; color: #ffffff; background: linear-gradient(135deg, var(--rich-gold), #A8833E); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); transition: 0.3s; }
     .mic-btn.recording { background: #D9534F; animation: pulse 1.5s infinite; }
@@ -36,7 +49,8 @@
     
     .list { list-style: none; padding: 0; margin: 0; }
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #EFECE6; }
-    .amount { font-weight: bold; color: var(--amethyst-purple); font-size: 16px; }
+    .amount-expense { font-weight: bold; color: var(--amethyst-purple); font-size: 16px; }
+    .amount-income { font-weight: bold; color: var(--income-green); font-size: 16px; }
     .delete-btn { color: #BBB; font-size: 14px; cursor: pointer; margin-left: 12px; padding: 4px; }
   </style>
 </head>
@@ -45,28 +59,47 @@
 <div class="container">
   <h2>語音記帳 App</h2>
   
-  <div class="tab-group">
-    <button class="tab-btn active" id="tab-studio" onclick="switchAccount('Studio')">🏢 Studio</button>
-    <button class="tab-btn" id="tab-personal" onclick="switchAccount('Personal')">🏠 Personal (私人)</button>
+  <!-- 1. 帳戶選擇 (Studio / Personal) -->
+  <div class="account-tab-group">
+    <button class="account-tab-btn active" id="tab-studio" onclick="switchAccount('Studio')">🏢 Studio</button>
+    <button class="account-tab-btn" id="tab-personal" onclick="switchAccount('Personal')">🏠 Personal (私人)</button>
   </div>
 
+  <!-- 2. 支出 / 收入 選擇 -->
+  <div class="type-tab-group">
+    <button class="type-tab-btn active-expense" id="tab-expense" onclick="switchType('expense')">💸 支出 (Expense)</button>
+    <button class="type-tab-btn" id="tab-income" onclick="switchType('income')">💰 收入 (Income)</button>
+  </div>
+
+  <!-- 3. 總計資訊 (只保留總收入與總支出) -->
   <div class="card">
-    <div class="card-account">目前帳戶：<strong id="current-account-display">Studio</strong></div>
-    <div class="card-total">總支出：$ <span id="total-amount">0</span></div>
+    <div class="card-account">目前檢視：<strong id="current-account-display">Studio</strong></div>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">總收入</div>
+        <div class="summary-val income">$ <span id="total-income">0</span></div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">總支出</div>
+        <div class="summary-val expense">$ <span id="total-expense">0</span></div>
+      </div>
+    </div>
   </div>
 
+  <!-- 4. 麥克風按鈕 -->
   <button class="mic-btn" id="mic-btn" onclick="toggleListening()">
     <span id="mic-icon">🎙️</span> <span id="mic-text">點擊開始語音輸入</span>
   </button>
 
-  <div class="status" id="status-text">直接講：「私人 dinner 6蚊」或「Studio 租金 10000」</div>
+  <div class="status" id="status-text">試試講：「私人 60蚊晚餐 save」或「Studio 收到學費 500」</div>
 
-  <h3 style="color: var(--jewel-teal); font-size: 15px; margin: 20px 0 10px 0;">近期紀錄</h3>
+  <h3 style="color: var(--jewel-teal); font-size: 15px; margin: 20px 0 10px 0;" id="list-title">近期支出紀錄</h3>
   <ul class="list" id="record-list"></ul>
 </div>
 
 <script>
   let currentAccount = 'Studio';
+  let currentType = 'expense'; // 'expense' 或 'income'
   let records = JSON.parse(localStorage.getItem('accounting_records') || '[]');
   let recognition = null;
   let isListening = false;
@@ -120,7 +153,24 @@
     renderRecords();
   }
 
-  // 中文數字轉阿拉伯數字函數
+  function switchType(type) {
+    currentType = type;
+    const expBtn = document.getElementById('tab-expense');
+    const incBtn = document.getElementById('tab-income');
+
+    if (type === 'expense') {
+      expBtn.className = 'type-tab-btn active-expense';
+      incBtn.className = 'type-tab-btn';
+      document.getElementById('list-title').innerText = '近期支出紀錄';
+    } else {
+      expBtn.className = 'type-tab-btn';
+      incBtn.className = 'type-tab-btn active-income';
+      document.getElementById('list-title').innerText = '近期收入紀錄';
+    }
+    renderRecords();
+  }
+
+  // 中文數字轉阿拉伯數字
   function zhToNum(text) {
     const zhMap = { '零':0, '一':1, '二':2, '兩':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10 };
     return text.replace(/[零一二兩三四五六七八九十]/g, m => zhMap[m]);
@@ -128,7 +178,6 @@
 
   function parseSpeechSmart(text) {
     let raw = text.trim();
-    // 先將中文數字轉為阿拉伯數字（例如：「六蚊」->「6蚊」）
     let normalized = zhToNum(raw);
     let lower = normalized.toLowerCase();
 
@@ -139,7 +188,17 @@
       switchAccount('Studio');
     }
 
-    // 2. 提取金額數字
+    // 2. 判斷是「收入」還是「支出」
+    let recordType = currentType;
+    if (/收入|賺|入數|收|出糧|營收|學費|人工/.test(lower)) {
+      recordType = 'income';
+      switchType('income');
+    } else if (/支出|用咗|買|花|付|找數|租金|餐|dinner|lunch/.test(lower)) {
+      recordType = 'expense';
+      switchType('expense');
+    }
+
+    // 3. 提取金額數字
     const numbers = normalized.match(/\d+/g);
     if (!numbers) {
       document.getElementById('status-text').innerText = `已切換至【${currentAccount}】，但未聽見金額數字`;
@@ -147,18 +206,26 @@
     }
     const amount = parseInt(numbers[numbers.length - 1], 10);
 
-    // 3. 過濾關鍵字，提取項目名稱
+    // 4. 清理與提取項目名稱
     let itemName = normalized
-      .replace(/私人|個人|personal|自己|私事|studio|工作室|公事|公司|新增|支出|記錄|記帳|蚊|塊|元|bucks/gi, '')
+      .replace(/私人|個人|personal|自己|私事|studio|工作室|公事|公司|新增|支出|收入|記錄|記帳|賺|收|蚊|塊|元|bucks|save|儲存|存/gi, '')
       .replace(/\d+/g, '')
       .replace(/[，,。.！!]/g, '')
       .trim();
 
-    if (!itemName) itemName = '雜項開支';
+    if (!itemName) {
+      if (recordType === 'income') {
+        itemName = '一般收入';
+      } else {
+        itemName = /dinner|晚餐|晚飯|午餐|lunch|食飯|餐/.test(lower) ? '晚餐/餐飲' : '日常開支';
+      }
+    }
 
+    // 5. 新增紀錄並儲存
     const record = {
       id: Date.now(),
       account: currentAccount,
+      type: recordType,
       item: itemName,
       amount: amount,
       date: new Date().toLocaleDateString('zh-HK')
@@ -167,7 +234,9 @@
     records.push(record);
     localStorage.setItem('accounting_records', JSON.stringify(records));
     renderRecords();
-    document.getElementById('status-text').innerText = `成功新增至【${currentAccount}】：${itemName} $${amount}`;
+
+    const typeTag = recordType === 'income' ? '💰 收入' : '💸 支出';
+    document.getElementById('status-text').innerText = `✅ 已成功儲存至【${currentAccount}】${typeTag}：${itemName} $${amount}`;
   }
 
   function deleteRecord(id) {
@@ -180,27 +249,45 @@
     const listEl = document.getElementById('record-list');
     listEl.innerHTML = '';
     
-    const filtered = records.filter(r => r.account === currentAccount);
-    let total = 0;
+    // 計算總收入與總支出
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    records.filter(r => r.account === currentAccount).forEach(r => {
+      const type = r.type || 'expense';
+      if (type === 'income') {
+        totalIncome += r.amount;
+      } else {
+        totalExpense += r.amount;
+      }
+    });
+
+    document.getElementById('total-income').innerText = totalIncome;
+    document.getElementById('total-expense').innerText = totalExpense;
+
+    // 渲染目前分頁 (支出或收入) 的詳細列表
+    const filtered = records.filter(r => r.account === currentAccount && (r.type || 'expense') === currentType);
 
     filtered.forEach(r => {
-      total += r.amount;
       const li = document.createElement('li');
       li.className = 'list-item';
+      
+      const isInc = r.type === 'income';
+      const amtClass = isInc ? 'amount-income' : 'amount-expense';
+      const sign = isInc ? '+$' : '-$';
+
       li.innerHTML = `
         <div>
           <strong style="color: var(--jewel-teal);">${r.item}</strong> 
           <span style="font-size: 12px; color: #888;">(${r.date})</span>
         </div>
         <div>
-          <span class="amount">-$${r.amount}</span>
+          <span class="${amtClass}">${sign}${r.amount}</span>
           <span class="delete-btn" onclick="deleteRecord(${r.id})">✕</span>
         </div>
       `;
       listEl.appendChild(li);
     });
-
-    document.getElementById('total-amount').innerText = total;
   }
 
   renderRecords();
