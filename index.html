@@ -2,93 +2,49 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>奢華風語音記帳</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>語音記帳 App</title>
   <style>
-    :root {
-      --jewel-teal: #0D5C63;
-      --rich-gold: #C5A059;
-      --amethyst-purple: #4A2040;
-      --income-green: #2E7D32;
-      --bg-color: #F8F6F0;
-      --text-color: #2C2C2C;
-    }
-
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-color); margin: 0; padding: 16px; color: var(--text-color); }
-    .container { max-width: 480px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(13, 92, 99, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); }
-    
-    h2 { text-align: center; margin: 0 0 16px 0; color: var(--jewel-teal); font-weight: 700; font-size: 20px; letter-spacing: 1px; }
-    
-    .account-tab-group { display: flex; gap: 8px; margin-bottom: 12px; background: #EFECE6; padding: 4px; border-radius: 12px; }
-    .account-tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #666; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
-    .account-tab-btn.active { background: var(--jewel-teal); color: #ffffff; box-shadow: 0 3px 8px rgba(13, 92, 99, 0.2); }
-
-    .type-tab-group { display: flex; gap: 8px; margin-bottom: 16px; }
-    .type-tab-btn { flex: 1; padding: 8px; border: 1px solid var(--jewel-teal); background: transparent; color: var(--jewel-teal); border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.3s; }
-    .type-tab-btn.active-expense { background: var(--amethyst-purple); color: #FFF; border-color: var(--amethyst-purple); }
-    .type-tab-btn.active-income { background: var(--income-green); color: #FFF; border-color: var(--income-green); }
-    
-    .card { background: linear-gradient(135deg, var(--amethyst-purple), #31132A); color: #ffffff; padding: 18px 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 6px 15px rgba(74, 32, 64, 0.2); border-left: 5px solid var(--rich-gold); }
-    .card-account { font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .summary-item { text-align: center; background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; }
-    .summary-label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
-    .summary-val { font-size: 18px; font-weight: bold; }
-    .summary-val.income { color: #81C784; }
-    .summary-val.expense { color: #FF8A80; }
-
-    .mic-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; color: #ffffff; background: linear-gradient(135deg, var(--rich-gold), #A8833E); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3); transition: 0.3s; }
-    .mic-btn.recording { background: #D9534F; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-    
-    .status { text-align: center; font-size: 13px; color: #666; min-height: 20px; margin-bottom: 16px; word-break: break-all; }
-    
-    .list { list-style: none; padding: 0; margin: 0; }
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #EFECE6; }
-    .amount-expense { font-weight: bold; color: var(--amethyst-purple); font-size: 16px; }
-    .amount-income { font-weight: bold; color: var(--income-green); font-size: 16px; }
-    .delete-btn { color: #BBB; font-size: 14px; cursor: pointer; margin-left: 12px; padding: 4px; }
+    body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+    button { padding: 10px 15px; font-size: 16px; margin: 5px 0; cursor: pointer; }
+    .card { background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .flex { display: flex; gap: 10px; margin-bottom: 10px; }
+    .flex button { flex: 1; }
+    .active { background: #007bff; color: white; border: none; }
+    .list-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
+    .delete-btn { color: red; cursor: pointer; }
   </style>
 </head>
 <body>
 
-<div class="container">
   <h2>語音記帳 App</h2>
-  
-  <div class="account-tab-group">
-    <button class="account-tab-btn active" id="tab-studio" onclick="switchAccount('Studio')">🏢 Studio</button>
-    <button class="account-tab-btn" id="tab-personal" onclick="switchAccount('Personal')">🏠 Personal (私人)</button>
+
+  <!-- 帳戶選擇 -->
+  <div class="flex">
+    <button id="tab-studio" class="active" onclick="switchAccount('Studio')">🏢 Studio</button>
+    <button id="tab-personal" onclick="switchAccount('Personal')">🏠 Personal (私人)</button>
   </div>
 
-  <div class="type-tab-group">
-    <button class="type-tab-btn active-expense" id="tab-expense" onclick="switchType('expense')">💸 支出 (Expense)</button>
-    <button class="type-tab-btn" id="tab-income" onclick="switchType('income')">💰 收入 (Income)</button>
+  <!-- 類別選擇 -->
+  <div class="flex">
+    <button id="tab-expense" class="active" onclick="switchType('expense')">💸 支出</button>
+    <button id="tab-income" onclick="switchType('income')">💰 收入</button>
   </div>
 
+  <!-- 統計摘要 (已移除淨結餘) -->
   <div class="card">
-    <div class="card-account">目前檢視：<strong id="current-account-display">Studio</strong></div>
-    <div class="summary-grid">
-      <div class="summary-item">
-        <div class="summary-label">總收入</div>
-        <div class="summary-val income">$ <span id="total-income">0</span></div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-label">總支出</div>
-        <div class="summary-val expense">$ <span id="total-expense">0</span></div>
-      </div>
-    </div>
+    <div>目前檢視：<strong id="current-account-display">Studio</strong></div>
+    <hr>
+    <div>總收入: $<span id="total-income">0</span></div>
+    <div>總支出: $<span id="total-expense">0</span></div>
   </div>
 
-  <button class="mic-btn" id="mic-btn" onclick="toggleListening()">
-    <span id="mic-icon">🎙️</span> <span id="mic-text">點擊開始語音輸入</span>
-  </button>
+  <!-- 語音按鈕 -->
+  <button id="mic-btn" style="width: 100%; font-size: 18px;" onclick="toggleListening()">🎙️ 點擊開始語音輸入</button>
+  <p id="status-text" style="color: #666; font-size: 14px;">請按下按鈕試講：「晚飯 20蚊」</p>
 
-  <div class="status" id="status-text">試試講：「私人 20蚊晚飯 save」</div>
-
-  <h3 style="color: var(--jewel-teal); font-size: 15px; margin: 20px 0 10px 0;" id="list-title">近期支出紀錄</h3>
-  <ul class="list" id="record-list"></ul>
-</div>
+  <h3 id="list-title">近期支出紀錄</h3>
+  <div id="record-list"></div>
 
 <script>
   let currentAccount = 'Studio';
@@ -106,14 +62,12 @@
 
     recognition.onstart = () => {
       isListening = true;
-      document.getElementById('mic-btn').classList.add('recording');
-      document.getElementById('mic-text').innerText = '聆聽中...請說話';
+      document.getElementById('mic-btn').innerText = '🛑 聆聽中...請說話';
       document.getElementById('status-text').innerText = '正在聆聽...';
     };
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      document.getElementById('status-text').innerText = `收到：「${transcript}」`;
       parseSpeechSmart(transcript);
     };
 
@@ -134,90 +88,65 @@
 
   function stopListening() {
     isListening = false;
-    document.getElementById('mic-btn').classList.remove('recording');
-    document.getElementById('mic-text').innerText = '點擊開始語音輸入';
+    document.getElementById('mic-btn').innerText = '🎙️ 點擊開始語音輸入';
   }
 
   function switchAccount(account) {
     currentAccount = account;
-    document.getElementById('tab-studio').classList.toggle('active', account === 'Studio');
-    document.getElementById('tab-personal').classList.toggle('active', account === 'Personal');
+    document.getElementById('tab-studio').className = account === 'Studio' ? 'active' : '';
+    document.getElementById('tab-personal').className = account === 'Personal' ? 'active' : '';
     document.getElementById('current-account-display').innerText = account === 'Personal' ? 'Personal (私人)' : 'Studio';
     renderRecords();
   }
 
   function switchType(type) {
     currentType = type;
-    const expBtn = document.getElementById('tab-expense');
-    const incBtn = document.getElementById('tab-income');
-
-    if (type === 'expense') {
-      expBtn.className = 'type-tab-btn active-expense';
-      incBtn.className = 'type-tab-btn';
-      document.getElementById('list-title').innerText = '近期支出紀錄';
-    } else {
-      expBtn.className = 'type-tab-btn';
-      incBtn.className = 'type-tab-btn active-income';
-      document.getElementById('list-title').innerText = '近期收入紀錄';
-    }
+    document.getElementById('tab-expense').className = type === 'expense' ? 'active' : '';
+    document.getElementById('tab-income').className = type === 'income' ? 'active' : '';
+    document.getElementById('list-title').innerText = type === 'expense' ? '近期支出紀錄' : '近期收入紀錄';
     renderRecords();
   }
 
   function zhToNum(text) {
-    const zhMap = { '零':0, '一':1, '二':2, '兩':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10 };
-    return text.replace(/[零一二兩三四五六七八九十]/g, m => zhMap[m]);
+    const zhMap = { '零':0, '一':1, '二':2, '兩':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10, '廿':20, '卅':30 };
+    return text.replace(/[零一二兩三四五六七八九十廿卅]/g, m => zhMap[m]);
   }
 
-  function parseSpeechSmart(text) {
-    let raw = text.trim();
-    let normalized = zhToNum(raw);
-    let lower = normalized.toLowerCase();
+  function parseSpeechSmart(transcript) {
+    let raw = transcript.trim();
+    let lower = zhToNum(raw).toLowerCase();
 
-    // 1. 判斷帳戶
-    if (/私人|個人|personal|自己|私事/.test(lower)) {
-      switchAccount('Personal');
-    } else if (/studio|工作室|公事|公司|工作坊/.test(lower)) {
-      switchAccount('Studio');
-    }
+    // 判斷帳戶
+    if (/私人|個人|personal|自己/.test(lower)) switchAccount('Personal');
+    else if (/studio|工作室|公司/.test(lower)) switchAccount('Studio');
 
-    // 2. 判斷是「收入」還是「支出」
+    // 判斷收入或支出
     let recordType = currentType;
-    if (/收入|賺|入數|收|出糧|營收|學費|人工/.test(lower)) {
-      recordType = 'income';
-    } else if (/支出|用咗|買|花|付|找數|租金|餐|dinner|lunch|晚飯|晚餐|食飯/.test(lower)) {
-      recordType = 'expense';
-    }
+    if (/收入|賺|入數|收|出糧|學費/.test(lower)) recordType = 'income';
+    else if (/支出|用咗|買|花|付|找數|餐|dinner|lunch|晚飯|晚餐|食飯/.test(lower)) recordType = 'expense';
     switchType(recordType);
 
-    // 3. 提取金額數字
-    const numbers = normalized.match(/\d+/g);
+    // 提取數字
+    const numbers = lower.match(/\d+/g);
     if (!numbers) {
-      document.getElementById('status-text').innerText = `已切換至【${currentAccount}】，但未聽見金額數字`;
+      document.getElementById('status-text').innerText = `收到：「${raw}」(未找到數字)`;
       return;
     }
     const amount = parseInt(numbers[numbers.length - 1], 10);
 
-    // 4. 精準提取項目名稱 (只刪除修飾詞，保留真實項目)
-    let itemName = normalized
-      .replace(/私人|個人|personal|自己|私事|studio|工作室|公事|公司|新增|支出|收入|記錄|記帳|賺|收|蚊|塊|元|bucks|save|儲存|存/gi, '')
+    // 提取項目名稱
+    let itemName = lower
+      .replace(/私人|個人|personal|自己|studio|工作室|公司|新增|支出|收入|記錄|記帳|賺|收|蚊|塊|元|save|儲存/gi, '')
       .replace(/\d+/g, '')
       .replace(/[，,。.！!]/g, '')
       .trim();
 
-    // 如果項目名稱被刪空了，根據原說話內容智能還原名稱
     if (!itemName) {
-      if (/晚飯|晚餐|dinner|食飯|餐/.test(lower)) {
-        itemName = '晚飯';
-      } else if (/午餐|lunch/.test(lower)) {
-        itemName = '午餐';
-      } else if (recordType === 'income') {
-        itemName = '一般收入';
-      } else {
-        itemName = '日常開支';
-      }
+      if (/晚飯|晚餐|dinner|食飯|餐/.test(lower)) itemName = '晚飯';
+      else itemName = recordType === 'income' ? '收入' : '支出';
     }
 
-    // 5. 儲存紀錄
+    // 儲存紀錄
     const record = {
       id: Date.now(),
       account: currentAccount,
@@ -231,8 +160,7 @@
     localStorage.setItem('accounting_records', JSON.stringify(records));
     renderRecords();
 
-    const typeTag = recordType === 'income' ? '💰 收入' : '💸 支出';
-    document.getElementById('status-text').innerText = `✅ 已成功儲存至【${currentAccount}】${typeTag}：${itemName} $${amount}`;
+    document.getElementById('status-text').innerText = `✅ 成功新增：${itemName} $${amount}`;
   }
 
   function deleteRecord(id) {
@@ -249,12 +177,8 @@
     let totalExpense = 0;
 
     records.filter(r => r.account === currentAccount).forEach(r => {
-      const type = r.type || 'expense';
-      if (type === 'income') {
-        totalIncome += r.amount;
-      } else {
-        totalExpense += r.amount;
-      }
+      if (r.type === 'income') totalIncome += r.amount;
+      else totalExpense += r.amount;
     });
 
     document.getElementById('total-income').innerText = totalIncome;
@@ -263,29 +187,19 @@
     const filtered = records.filter(r => r.account === currentAccount && (r.type || 'expense') === currentType);
 
     filtered.forEach(r => {
-      const li = document.createElement('li');
-      li.className = 'list-item';
-      
-      const isInc = r.type === 'income';
-      const amtClass = isInc ? 'amount-income' : 'amount-expense';
-      const sign = isInc ? '+$' : '-$';
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      const sign = r.type === 'income' ? '+$' : '-$';
 
-      li.innerHTML = `
-        <div>
-          <strong style="color: var(--jewel-teal);">${r.item}</strong> 
-          <span style="font-size: 12px; color: #888;">(${r.date})</span>
-        </div>
-        <div>
-          <span class="${amtClass}">${sign}${r.amount}</span>
-          <span class="delete-btn" onclick="deleteRecord(${r.id})">✕</span>
-        </div>
+      div.innerHTML = `
+        <span><strong>${r.item}</strong> (${r.date})</span>
+        <span>${sign}${r.amount} <span class="delete-btn" onclick="deleteRecord(${r.id})">✕</span></span>
       `;
-      listEl.appendChild(li);
+      listEl.appendChild(div);
     });
   }
 
   renderRecords();
 </script>
-
 </body>
 </html>
