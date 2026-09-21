@@ -6,37 +6,32 @@
   <title>Luxury Expense Tracker</title>
   <style>
     :root {
-      --sage-green: #8A9A86;
+      --sage-green: #1D5D5D;
       --deep-sage: #3B4A39;
       --matte-gold: #C5A059;
       --soft-bg: #F4F6F3;
       --card-bg: #FFFFFF;
-      --income-green: #2E7D32;
-      --expense-red: #C62828;
+      --income-green: #6F803C;
+      --expense-red: #A3464D;
       --border-light: #EAECE8;
     }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--soft-bg); margin: 0; padding: 16px; color: #2A3229; padding-bottom: 80px; }
     .container { max-width: 480px; margin: 0 auto; }
     
-    h2 { text-align: center; margin: 0 0 18px 0; color: var(--deep-sage); font-size: 22px; }
+    h2 { text-align: center; margin: 0 0 18px 0; color: var(--sage-green); font-size: 22px; }
     
     /* Tabs */
     .tab-group { display: flex; gap: 8px; margin-bottom: 12px; }
     .tab-btn { flex: 1; padding: 12px; border: none; background: #EAECE8; color: #666; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .tab-btn.active-acc { background: var(--deep-sage); color: #fff; }
+    .tab-btn.active-acc { background: var(--sage-green); color: #fff; }
     .tab-btn.active-exp { background: var(--expense-red); color: #fff; }
     .tab-btn.active-inc { background: var(--income-green); color: #fff; }
 
     /* Summary Card */
-    .card { background: linear-gradient(135deg, var(--deep-sage), #253124); color: #fff; padding: 20px; border-radius: 20px; margin-bottom: 18px; border-left: 6px solid var(--matte-gold); text-align: center; box-shadow: 0 8px 20px rgba(59,74,57,0.15); }
+    .card { background: linear-gradient(135deg, var(--sage-green), #113636); color: #fff; padding: 20px; border-radius: 20px; margin-bottom: 18px; border-left: 6px solid var(--matte-gold); text-align: center; box-shadow: 0 8px 20px rgba(29,93,93,0.15); }
     .summary-grid { display: flex; justify-content: space-around; margin-top: 10px; }
     .summary-val { font-size: 20px; font-weight: bold; }
-    
-    /* Mic Button */
-    .mic-btn { width: 100%; padding: 16px; font-size: 16px; font-weight: bold; color: #fff; background: linear-gradient(135deg, var(--matte-gold), #A8833E); border: none; border-radius: 16px; cursor: pointer; margin-bottom: 12px; transition: 0.3s; box-shadow: 0 4px 14px rgba(197,160,89,0.3); }
-    .mic-btn.recording { background: var(--expense-red); animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     
     .status { text-align: center; font-size: 14px; color: #555; padding: 10px; background: #EFEFEF; border-radius: 12px; margin-bottom: 16px; }
 
@@ -44,17 +39,17 @@
     .manual-box { background: var(--card-bg); padding: 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border-light); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
     .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .input-row input, .input-row select { flex: 1; padding: 10px; border: 1px solid #CCC; border-radius: 10px; font-size: 14px; background: #FFF; color: #333; }
-    .add-btn { width: 100%; padding: 12px; background: var(--deep-sage); color: #FFF; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    .add-btn { width: 100%; padding: 12px; background: var(--sage-green); color: #FFF; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
 
     /* Section Titles */
-    h3 { font-size: 16px; color: var(--deep-sage); border-bottom: 2px solid var(--matte-gold); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; display: flex; justify-content: space-between; }
-    
-    /* Category Breakdown */
-    .cat-list { background: var(--card-bg); border-radius: 16px; padding: 12px; border: 1px solid var(--border-light); margin-bottom: 20px; }
-    .cat-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; }
-    .cat-item:last-child { border-bottom: none; }
-    .cat-bar-bg { width: 100%; background: #F0F0F0; height: 6px; border-radius: 3px; margin-top: 4px; overflow: hidden; }
-    .cat-bar-fill { height: 100%; background: var(--matte-gold); border-radius: 3px; }
+    h3 { font-size: 16px; color: var(--sage-green); border-bottom: 2px solid var(--matte-gold); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .settings-btn { font-size: 12px; background: #EAECE8; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; color: #444; }
+
+    /* Chart Area */
+    .chart-container { background: var(--card-bg); border-radius: 16px; padding: 16px; border: 1px solid var(--border-light); margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .chart-legend { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+    .legend-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; border-bottom: 1px solid #F5F5F5; }
+    .legend-color { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 6px; }
 
     /* Record List */
     .list { list-style: none; padding: 0; margin: 0; background: var(--card-bg); border-radius: 16px; padding: 10px; border: 1px solid var(--border-light); }
@@ -65,13 +60,16 @@
     
     /* Modal */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
-    .modal-content { background: #FFF; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px; }
-    .modal-title { font-size: 18px; font-weight: bold; color: var(--deep-sage); margin-bottom: 16px; text-align: center; }
+    .modal-content { background: #FFF; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-size: 18px; font-weight: bold; color: var(--sage-green); margin-bottom: 16px; text-align: center; }
     .modal-btn-group { display: flex; gap: 10px; margin-top: 16px; }
     .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    .btn-save { background: var(--deep-sage); color: #FFF; }
+    .btn-save { background: var(--sage-green); color: #FFF; }
     .btn-cancel { background: #EAECE8; color: #555; }
     .btn-delete { background: var(--expense-red); color: #FFF; margin-top: 10px; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    
+    .sortable-item { display: flex; align-items: center; justify-content: space-between; background: #F9F9F9; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #EAECE8; }
+    .sortable-btns button { background: #EAECE8; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -91,13 +89,12 @@
   <div class="card">
     <div style="font-size: 13px; opacity: 0.8;">當前帳戶: <span id="acc-display">Studio</span> (<span id="month-display">本月</span>)</div>
     <div class="summary-grid">
-      <div>總收入<br><span class="summary-val" style="color:#81C784" id="total-inc">$0</span></div>
-      <div>總開支<br><span class="summary-val" style="color:#FF8A80" id="total-exp">$0</span></div>
+      <div>總收入<br><span class="summary-val" style="color:var(--income-green)" id="total-inc">$0.00</span></div>
+      <div>總開支<br><span class="summary-val" style="color:var(--expense-red)" id="total-exp">$0.00</span></div>
     </div>
   </div>
 
-  <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎙️ 點擊語音記帳 (Tap to Speak)</button>
-  <div class="status" id="status-box">或在下方手動輸入紀錄</div>
+  <div class="status" id="status-box">請在下方手動輸入紀錄</div>
 
   <!-- 手動輸入區塊 -->
   <div class="manual-box">
@@ -107,14 +104,20 @@
     </div>
     <div class="input-row">
       <input type="text" id="add-item" placeholder="項目名稱 (選填)">
-      <input type="number" id="add-amt" placeholder="金額 $" pattern="[0-9]*">
+      <input type="number" id="add-amt" placeholder="金額 $ (支援小數)" step="0.01">
     </div>
     <button class="add-btn" onclick="addManualRecord()">新增紀錄</button>
   </div>
 
-  <!-- 當月分類排行 -->
-  <h3>📊 當月分類排行</h3>
-  <div class="cat-list" id="cat-breakdown"></div>
+  <!-- 當月分類圓餅圖 -->
+  <h3>
+    <span>📊 當月分類比例</span>
+    <button class="settings-btn" onclick="openSortModal()">⚙️ 排序分類</button>
+  </h3>
+  <div class="chart-container">
+    <canvas id="pieChart" width="200" height="200" style="max-width:200px; max-height:200px;"></canvas>
+    <div class="chart-legend" id="chart-legend"></div>
+  </div>
 
   <!-- 當月列表 -->
   <h3>📝 當月紀錄 <span style="font-size:12px; font-weight:normal; color:#888;">點擊可編輯</span></h3>
@@ -129,7 +132,7 @@
     <div class="input-row"><input type="date" id="edit-date"></div>
     <div class="input-row"><select id="edit-cat" onchange="checkCustomCategory('edit-cat')"></select></div>
     <div class="input-row"><input type="text" id="edit-item" placeholder="項目名稱"></div>
-    <div class="input-row"><input type="number" id="edit-amt" placeholder="金額 $"></div>
+    <div class="input-row"><input type="number" id="edit-amt" placeholder="金額 $" step="0.01"></div>
     
     <div class="modal-btn-group">
       <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
@@ -139,11 +142,22 @@
   </div>
 </div>
 
+<!-- 分類排序視窗 -->
+<div class="modal-overlay" id="sort-modal">
+  <div class="modal-content">
+    <div class="modal-title">調整分類排序</div>
+    <div id="sort-list-container" style="margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
+    <div class="modal-btn-group">
+      <button class="modal-btn btn-cancel" onclick="closeSortModal()">關閉</button>
+      <button class="modal-btn btn-save" onclick="saveSortOrder()">儲存排序</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // --- 資料初始化與預設設定 ---
   let account = 'Studio';
   let type = 'expense';
-  let records = JSON.parse(localStorage.getItem('luxury_records_v2') || '[]');
+  let records = JSON.parse(localStorage.getItem('luxury_records_v3') || '[]');
   
   const defaultCategories = {
     Personal: {
@@ -151,96 +165,31 @@
       income: ["補習", "yoga", "sound", "movements", "workshops", "gifted", "其他"]
     },
     Studio: {
-      expense: ["場地租金", "營運", "行銷", "其他"],
+      expense: ["場地租金", "營運", "Tools", "行銷", "其他"],
       income: ["yoga", "sound", "workshops", "其他"]
     }
   };
   
-  // 載入或初始化自訂分類
-  let savedCategories = JSON.parse(localStorage.getItem('luxury_categories'));
+  let savedCategories = JSON.parse(localStorage.getItem('luxury_categories_v3'));
   if (!savedCategories) {
     savedCategories = defaultCategories;
-    localStorage.setItem('luxury_categories', JSON.stringify(savedCategories));
+    localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
   }
 
-  // 獲取當地時區的 YYYY-MM-DD
   function getLocalYMD() {
     const d = new Date();
     const offset = d.getTimezoneOffset() * 60000;
     return new Date(d.getTime() - offset).toISOString().split('T')[0];
   }
   
-  const currentMonth = getLocalYMD().substring(0, 7); // "YYYY-MM"
+  const currentMonth = getLocalYMD().substring(0, 7);
   document.getElementById('add-date').value = getLocalYMD();
 
-  // --- 語音功能 ---
-  let recognition = null;
-  let isListening = false;
+  const chartColors = [
+    '#1D5D5D', '#C5A059', '#6F803C', '#A3464D', '#4A6B82', 
+    '#D9822B', '#7A4988', '#207C69', '#A65141', '#5B6770'
+  ];
 
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'zh-HK'; 
-
-    recognition.onstart = () => {
-      isListening = true;
-      document.getElementById('mic-btn').classList.add('recording');
-      document.getElementById('mic-btn').innerText = '正在聆聽... (Listening)';
-      document.getElementById('status-box').innerText = '請說出項目與金額...';
-    };
-
-    recognition.onresult = (event) => {
-      processVoice(event.results[0][0].transcript);
-    };
-
-    recognition.onerror = () => stopMic();
-    recognition.onend = () => stopMic();
-  } else {
-    document.getElementById('mic-btn').style.display = 'none';
-  }
-
-  function toggleMic() {
-    if (!recognition) return;
-    if (isListening) recognition.stop();
-    else recognition.start();
-  }
-
-  function stopMic() {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('recording');
-    document.getElementById('mic-btn').innerText = '🎙️ 點擊語音記帳 (Tap to Speak)';
-  }
-
-  function processVoice(text) {
-    stopMic();
-    const numMatches = text.match(/\d+/g);
-    let amount = 0;
-    let item = text;
-
-    if (numMatches && numMatches.length > 0) {
-      amount = parseInt(numMatches[numMatches.length - 1], 10);
-      item = text.replace(amount.toString(), '').trim();
-    }
-
-    // 預設分類
-    const catList = savedCategories[account][type];
-    const defaultCat = catList.includes("其他") ? "其他" : catList[0];
-    if (!item) item = defaultCat;
-
-    records.push({
-      id: Date.now(), account, type, 
-      category: defaultCat, item: item, amount: amount, 
-      date: getLocalYMD()
-    });
-    
-    saveRecords();
-    if (navigator.vibrate) navigator.vibrate(50);
-    document.getElementById('status-box').innerText = `✅ 語音新增: ${item} $${amount}`;
-    render();
-  }
-
-  // --- 手動輸入與分類管理 ---
   function updateCategoryDropdown(selectId, selectedValue = '') {
     const selectEl = document.getElementById(selectId);
     const catList = savedCategories[account][type];
@@ -261,11 +210,11 @@
       const newCat = prompt("請輸入新的分類名稱:");
       if (newCat && newCat.trim() !== '') {
         savedCategories[account][type].push(newCat.trim());
-        localStorage.setItem('luxury_categories', JSON.stringify(savedCategories));
+        localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
         updateCategoryDropdown('add-cat', newCat.trim());
         updateCategoryDropdown('edit-cat', newCat.trim());
       } else {
-        updateCategoryDropdown(selectId); // reset to default
+        updateCategoryDropdown(selectId);
       }
     }
   }
@@ -274,10 +223,10 @@
     const date = document.getElementById('add-date').value || getLocalYMD();
     const cat = document.getElementById('add-cat').value;
     let item = document.getElementById('add-item').value.trim();
-    const amt = parseInt(document.getElementById('add-amt').value, 10);
+    const amt = parseFloat(document.getElementById('add-amt').value);
     
-    if (!amt) {
-      alert("請輸入金額");
+    if (isNaN(amt)) {
+      alert("請輸入有效的金額");
       return;
     }
     if (!item) item = cat;
@@ -289,11 +238,10 @@
     saveRecords();
     document.getElementById('add-item').value = '';
     document.getElementById('add-amt').value = '';
-    document.getElementById('status-box').innerText = `✅ 手動新增: ${item} $${amt}`;
+    document.getElementById('status-box').innerText = `✅ 新增成功: ${item} $${amt.toFixed(2)}`;
     render();
   }
 
-  // --- 狀態切換 ---
   function setAccount(acc) {
     account = acc;
     document.getElementById('tab-studio').className = 'tab-btn ' + (acc==='Studio'?'active-acc':'');
@@ -311,7 +259,6 @@
     render();
   }
 
-  // --- 編輯與刪除 ---
   function openEditModal(id) {
     const r = records.find(x => x.id === id);
     if(!r) return;
@@ -336,7 +283,7 @@
       records[rIndex].date = document.getElementById('edit-date').value;
       records[rIndex].category = document.getElementById('edit-cat').value;
       records[rIndex].item = document.getElementById('edit-item').value || records[rIndex].category;
-      records[rIndex].amount = parseInt(document.getElementById('edit-amt').value, 10) || 0;
+      records[rIndex].amount = parseFloat(document.getElementById('edit-amt').value) || 0;
       saveRecords();
       closeModal();
       render();
@@ -354,15 +301,85 @@
   }
 
   function saveRecords() {
-    localStorage.setItem('luxury_records_v2', JSON.stringify(records));
+    localStorage.setItem('luxury_records_v3', JSON.stringify(records));
   }
 
-  // --- 畫面渲染 ---
+  // --- 分類排序功能 ---
+  function openSortModal() {
+    const container = document.getElementById('sort-list-container');
+    const catList = savedCategories[account][type];
+    container.innerHTML = catList.map((c, index) => `
+      <div class="sortable-item" data-cat="${c}">
+        <span>${c}</span>
+        <div class="sortable-btns">
+          <button onclick="moveCat(${index}, -1)">▲</button>
+          <button onclick="moveCat(${index}, 1)">▼</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('sort-modal').style.display = 'flex';
+  }
+
+  function closeSortModal() {
+    document.getElementById('sort-modal').style.display = 'none';
+  }
+
+  function moveCat(index, direction) {
+    const catList = savedCategories[account][type];
+    const newIndex = index + direction;
+    if (newIndex >= 0 && newIndex < catList.length) {
+      const temp = catList[index];
+      catList[index] = catList[newIndex];
+      catList[newIndex] = temp;
+      openSortModal(); // 重新整理排序視窗
+    }
+  }
+
+  function saveSortOrder() {
+    localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
+    closeSortModal();
+    updateCategoryDropdown('add-cat');
+    render();
+  }
+
+  // --- 畫布圓餅圖繪製 ---
+  function drawPieChart(dataMap) {
+    const canvas = document.getElementById('pieChart');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const total = Object.values(dataMap).reduce((a, b) => a + b, 0);
+    const keys = Object.keys(dataMap);
+
+    if (total === 0 || keys.length === 0) {
+      ctx.fillStyle = '#CCCCCC';
+      ctx.beginPath();
+      ctx.arc(100, 100, 80, 0, 2 * Math.PI);
+      ctx.fill();
+      return;
+    }
+
+    let startAngle = 0;
+    keys.forEach((key, index) => {
+      const val = dataMap[key];
+      const sliceAngle = (val / total) * 2 * Math.PI;
+      const color = chartColors[index % chartColors.length];
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(100, 100);
+      ctx.arc(100, 100, 80, startAngle, startAngle + sliceAngle);
+      ctx.closePath();
+      ctx.fill();
+
+      startAngle += sliceAngle;
+    });
+  }
+
   function render() {
     const d = new Date();
     document.getElementById('month-display').innerText = `${d.getMonth()+1}月`;
 
-    // 篩選出「當前帳戶」且「當前月份」的所有紀錄 (不分收支，算總數用)
     const currentMonthRecords = records.filter(r => r.account === account && r.date.startsWith(currentMonth));
     
     let totalInc = 0, totalExp = 0;
@@ -371,41 +388,51 @@
       else totalExp += r.amount;
     });
     
-    document.getElementById('total-inc').innerText = '$' + totalInc.toLocaleString();
-    document.getElementById('total-exp').innerText = '$' + totalExp.toLocaleString();
+    document.getElementById('total-inc').innerText = '$' + totalInc.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('total-exp').innerText = '$' + totalExp.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    // 篩選出目前 Tab (支出/收入) 的當月紀錄，用作列表與排行
     const tabRecords = currentMonthRecords.filter(r => r.type === type);
     
-    // 1. 渲染分類排行 (Category Breakdown)
+    // 按照自訂順序排列分類金額
     const catMap = {};
+    savedCategories[account][type].forEach(c => { catMap[c] = 0; });
+    
     tabRecords.forEach(r => {
-      catMap[r.category] = (catMap[r.category] || 0) + r.amount;
+      if (catMap[r.category] !== undefined) {
+        catMap[r.category] += r.amount;
+      } else {
+        catMap[r.category] = r.amount; // 應對自訂分類
+      }
     });
-    
-    const sortedCats = Object.keys(catMap).map(k => ({ cat: k, amt: catMap[k] })).sort((a,b) => b.amt - a.amt);
-    const maxCatAmt = sortedCats.length > 0 ? sortedCats[0].amt : 1;
-    
-    const catBreakdownEl = document.getElementById('cat-breakdown');
-    if (sortedCats.length === 0) {
-      catBreakdownEl.innerHTML = '<div style="text-align:center; color:#999; padding:10px;">尚無紀錄</div>';
+
+    // 濾除金額為 0 的分類供圓餅圖使用（保持排序）
+    const activeDataMap = {};
+    Object.keys(catMap).forEach(k => {
+      if (catMap[k] > 0) activeDataMap[k] = catMap[k];
+    });
+
+    drawPieChart(activeDataMap);
+
+    // 渲染圖例與數值
+    const legendEl = document.getElementById('chart-legend');
+    const activeKeys = Object.keys(activeDataMap);
+    if (activeKeys.length === 0) {
+      legendEl.innerHTML = '<div style="text-align:center; color:#999; padding:5px;">本月尚無分類數據</div>';
     } else {
-      catBreakdownEl.innerHTML = sortedCats.map(c => `
-        <div class="cat-item">
-          <div style="width:100%;">
-            <div style="display:flex; justify-content:space-between;">
-              <strong style="color:var(--deep-sage)">${c.cat}</strong>
-              <span style="font-weight:bold;">$${c.amt.toLocaleString()}</span>
-            </div>
-            <div class="cat-bar-bg">
-              <div class="cat-bar-fill" style="width:${(c.amt / maxCatAmt)*100}%"></div>
-            </div>
+      let colorIdx = 0;
+      legendEl.innerHTML = activeKeys.map(k => {
+        const color = chartColors[colorIdx++ % chartColors.length];
+        const val = activeDataMap[k];
+        return `
+          <div class="legend-item">
+            <div><span class="legend-color" style="background:${color}"></span>${k}</div>
+            <div style="font-weight:bold;">$${val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    // 2. 渲染紀錄列表 (按日期排序，新到舊)
+    // 渲染紀錄列表
     const listEl = document.getElementById('record-list');
     tabRecords.sort((a,b) => new Date(b.date) - new Date(a.date));
     
@@ -422,14 +449,13 @@
             <div class="item-date">${r.date}</div>
           </div>
           <div style="font-weight:bold; font-size:16px; color:${r.type==='income'?'var(--income-green)':'var(--expense-red)'}">
-            ${r.type==='income'?'+':'-'}$${r.amount.toLocaleString()}
+            ${r.type==='income'?'+':'-'}$${r.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
           </div>
         </li>
       `).join('');
     }
   }
 
-  // 初始化
   updateCategoryDropdown('add-cat');
   render();
 </script>
