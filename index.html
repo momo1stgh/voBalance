@@ -1,326 +1,437 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>語音雙帳戶記帳</title>
-    <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #f4f5f7; padding: 16px; max-width: 500px; margin: 0 auto; color: #1c1c1e; }
-        .account-switcher { display: flex; background: #e3e3e8; padding: 4px; border-radius: 12px; margin-bottom: 16px; }
-        .account-btn { flex: 1; border: none; padding: 10px; font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; background: transparent; color: #636366; transition: 0.2s; }
-        .account-btn.active { background: #ffffff; color: #000000; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-        .mic-card { background: #ffffff; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px; }
-        .mic-btn { background: #007aff; color: white; border: none; width: 72px; height: 72px; border-radius: 50%; font-size: 28px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,122,255,0.3); }
-        .mic-btn.listening { background: #ff3b30; animation: pulse 1.2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
-        .status { margin-top: 10px; font-size: 13px; color: #8e8e93; }
-        .transcript { background: #f0f0f5; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 14px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
-        .form-card { background: #ffffff; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px; }
-        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .form-group { flex: 1; text-align: left; }
-        .form-group label { display: block; font-size: 12px; color: #8e8e93; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 15px; background: #fafafa; }
-        .save-btn { width: 100%; background: #34c759; color: white; border: none; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 6px; }
-        .summary-card { background: #1c1c1e; color: white; padding: 16px; border-radius: 14px; display: flex; justify-content: space-between; margin-bottom: 16px; }
-        .summary-item { text-align: center; }
-        .summary-item .label { font-size: 11px; color: #8e8e93; margin-bottom: 2px; }
-        .summary-item .val { font-size: 18px; font-weight: bold; }
-        .val.income { color: #30d158; }
-        .val.expense { color: #ff453a; }
-        .logs { margin-top: 10px; }
-        .log-item { background: #ffffff; padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        .log-info small { color: #8e8e93; display: block; font-size: 12px; }
-        .expense-num { color: #ff3b30; font-weight: bold; font-size: 16px; }
-        .income-num { color: #34c759; font-weight: bold; font-size: 16px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Luxury Expense Tracker</title>
+  <style>
+    :root {
+      --sage-green: #8A9A86;
+      --deep-sage: #3B4A39;
+      --matte-gold: #C5A059;
+      --soft-bg: #F4F6F3;
+      --card-bg: #FFFFFF;
+      --income-green: #2E7D32;
+      --expense-red: #C62828;
+      --border-light: #EAECE8;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--soft-bg); margin: 0; padding: 16px; color: #2A3229; padding-bottom: 80px; }
+    .container { max-width: 480px; margin: 0 auto; }
+    
+    h2 { text-align: center; margin: 0 0 18px 0; color: var(--deep-sage); font-size: 22px; }
+    
+    /* Tabs */
+    .tab-group { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tab-btn { flex: 1; padding: 12px; border: none; background: #EAECE8; color: #666; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active-acc { background: var(--deep-sage); color: #fff; }
+    .tab-btn.active-exp { background: var(--expense-red); color: #fff; }
+    .tab-btn.active-inc { background: var(--income-green); color: #fff; }
+
+    /* Summary Card */
+    .card { background: linear-gradient(135deg, var(--deep-sage), #253124); color: #fff; padding: 20px; border-radius: 20px; margin-bottom: 18px; border-left: 6px solid var(--matte-gold); text-align: center; box-shadow: 0 8px 20px rgba(59,74,57,0.15); }
+    .summary-grid { display: flex; justify-content: space-around; margin-top: 10px; }
+    .summary-val { font-size: 20px; font-weight: bold; }
+    
+    /* Mic Button */
+    .mic-btn { width: 100%; padding: 16px; font-size: 16px; font-weight: bold; color: #fff; background: linear-gradient(135deg, var(--matte-gold), #A8833E); border: none; border-radius: 16px; cursor: pointer; margin-bottom: 12px; transition: 0.3s; box-shadow: 0 4px 14px rgba(197,160,89,0.3); }
+    .mic-btn.recording { background: var(--expense-red); animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+    
+    .status { text-align: center; font-size: 14px; color: #555; padding: 10px; background: #EFEFEF; border-radius: 12px; margin-bottom: 16px; }
+
+    /* Manual Input Form */
+    .manual-box { background: var(--card-bg); padding: 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border-light); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .input-row input, .input-row select { flex: 1; padding: 10px; border: 1px solid #CCC; border-radius: 10px; font-size: 14px; background: #FFF; color: #333; }
+    .add-btn { width: 100%; padding: 12px; background: var(--deep-sage); color: #FFF; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
+
+    /* Section Titles */
+    h3 { font-size: 16px; color: var(--deep-sage); border-bottom: 2px solid var(--matte-gold); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; display: flex; justify-content: space-between; }
+    
+    /* Category Breakdown */
+    .cat-list { background: var(--card-bg); border-radius: 16px; padding: 12px; border: 1px solid var(--border-light); margin-bottom: 20px; }
+    .cat-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; }
+    .cat-item:last-child { border-bottom: none; }
+    .cat-bar-bg { width: 100%; background: #F0F0F0; height: 6px; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+    .cat-bar-fill { height: 100%; background: var(--matte-gold); border-radius: 3px; }
+
+    /* Record List */
+    .list { list-style: none; padding: 0; margin: 0; background: var(--card-bg); border-radius: 16px; padding: 10px; border: 1px solid var(--border-light); }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0; cursor: pointer; }
+    .list-item:last-child { border-bottom: none; }
+    .item-tag { font-size: 11px; background: #EAECE8; padding: 3px 8px; border-radius: 8px; color: #555; margin-right: 6px; }
+    .item-date { font-size: 12px; color: #999; margin-top: 4px; }
+    
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content { background: #FFF; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px; }
+    .modal-title { font-size: 18px; font-weight: bold; color: var(--deep-sage); margin-bottom: 16px; text-align: center; }
+    .modal-btn-group { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    .btn-save { background: var(--deep-sage); color: #FFF; }
+    .btn-cancel { background: #EAECE8; color: #555; }
+    .btn-delete { background: var(--expense-red); color: #FFF; margin-top: 10px; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+  </style>
 </head>
 <body>
 
-    <div class="account-switcher">
-        <button id="btnPersonal" class="account-btn active" onclick="switchAccount('personal')">🏠 個人帳戶</button>
-        <button id="btnStudio" class="account-btn" onclick="switchAccount('studio')">🏢 Studio 帳戶</button>
-    </div>
+<div class="container">
+  <h2>Luxury Expense Tracker</h2>
+  
+  <div class="tab-group">
+    <button class="tab-btn active-acc" id="tab-studio" onclick="setAccount('Studio')">🏢 Studio</button>
+    <button class="tab-btn" id="tab-personal" onclick="setAccount('Personal')">🏠 個人 (Personal)</button>
+  </div>
+  <div class="tab-group">
+    <button class="tab-btn active-exp" id="tab-expense" onclick="setType('expense')">💸 開支 (Expense)</button>
+    <button class="tab-btn" id="tab-income" onclick="setType('income')">💰 收入 (Income)</button>
+  </div>
 
-    <div class="summary-card">
-        <div class="summary-item">
-            <div class="label">總收入</div>
-            <div id="totalIncome" class="val income">$0</div>
-        </div>
-        <div class="summary-item">
-            <div class="label">總開支</div>
-            <div id="totalExpense" class="val expense">$0</div>
-        </div>
-        <div class="summary-item">
-            <div class="label">淨盈餘</div>
-            <div id="netBalance" class="val">$0</div>
-        </div>
+  <div class="card">
+    <div style="font-size: 13px; opacity: 0.8;">當前帳戶: <span id="acc-display">Studio</span> (<span id="month-display">本月</span>)</div>
+    <div class="summary-grid">
+      <div>總收入<br><span class="summary-val" style="color:#81C784" id="total-inc">$0</span></div>
+      <div>總開支<br><span class="summary-val" style="color:#FF8A80" id="total-exp">$0</span></div>
     </div>
+  </div>
 
-    <div class="mic-card">
-        <button id="micBtn" class="mic-btn">🎙️</button>
-        <div id="status" class="status">點擊按鈕說話</div>
-        <div id="transcript" class="transcript">等待語音輸入...</div>
+  <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎙️ 點擊語音記帳 (Tap to Speak)</button>
+  <div class="status" id="status-box">或在下方手動輸入紀錄</div>
+
+  <!-- 手動輸入區塊 -->
+  <div class="manual-box">
+    <div class="input-row">
+      <input type="date" id="add-date">
+      <select id="add-cat" onchange="checkCustomCategory('add-cat')"></select>
     </div>
+    <div class="input-row">
+      <input type="text" id="add-item" placeholder="項目名稱 (選填)">
+      <input type="number" id="add-amt" placeholder="金額 $" pattern="[0-9]*">
+    </div>
+    <button class="add-btn" onclick="addManualRecord()">新增紀錄</button>
+  </div>
 
-    <div class="form-card">
-        <div class="form-row">
-            <div class="form-group">
-                <label>類型</label>
-                <select id="type" onchange="updateCategoryOptions()">
-                    <option value="支出">支出</option>
-                    <option value="收入">收入</option>
-                </select>
+  <!-- 當月分類排行 -->
+  <h3>📊 當月分類排行</h3>
+  <div class="cat-list" id="cat-breakdown"></div>
+
+  <!-- 當月列表 -->
+  <h3>📝 當月紀錄 <span style="font-size:12px; font-weight:normal; color:#888;">點擊可編輯</span></h3>
+  <ul class="list" id="record-list"></ul>
+</div>
+
+<!-- 編輯視窗 -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-content">
+    <div class="modal-title">編輯紀錄</div>
+    <input type="hidden" id="edit-id">
+    <div class="input-row"><input type="date" id="edit-date"></div>
+    <div class="input-row"><select id="edit-cat" onchange="checkCustomCategory('edit-cat')"></select></div>
+    <div class="input-row"><input type="text" id="edit-item" placeholder="項目名稱"></div>
+    <div class="input-row"><input type="number" id="edit-amt" placeholder="金額 $"></div>
+    
+    <div class="modal-btn-group">
+      <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
+      <button class="modal-btn btn-save" onclick="saveEdit()">儲存</button>
+    </div>
+    <button class="btn-delete" onclick="deleteRecord()">🗑️ 刪除此紀錄</button>
+  </div>
+</div>
+
+<script>
+  // --- 資料初始化與預設設定 ---
+  let account = 'Studio';
+  let type = 'expense';
+  let records = JSON.parse(localStorage.getItem('luxury_records_v2') || '[]');
+  
+  const defaultCategories = {
+    Personal: {
+      expense: ["飲食", "糧儲", "家居", "營運", "交通", "購物-衣", "購物-物質", "購物-送禮", "學習/進修", "保險/投資", "家用", "其他"],
+      income: ["補習", "yoga", "sound", "movements", "workshops", "gifted", "其他"]
+    },
+    Studio: {
+      expense: ["場地租金", "營運", "行銷", "其他"],
+      income: ["yoga", "sound", "workshops", "其他"]
+    }
+  };
+  
+  // 載入或初始化自訂分類
+  let savedCategories = JSON.parse(localStorage.getItem('luxury_categories'));
+  if (!savedCategories) {
+    savedCategories = defaultCategories;
+    localStorage.setItem('luxury_categories', JSON.stringify(savedCategories));
+  }
+
+  // 獲取當地時區的 YYYY-MM-DD
+  function getLocalYMD() {
+    const d = new Date();
+    const offset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - offset).toISOString().split('T')[0];
+  }
+  
+  const currentMonth = getLocalYMD().substring(0, 7); // "YYYY-MM"
+  document.getElementById('add-date').value = getLocalYMD();
+
+  // --- 語音功能 ---
+  let recognition = null;
+  let isListening = false;
+
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'zh-HK'; 
+
+    recognition.onstart = () => {
+      isListening = true;
+      document.getElementById('mic-btn').classList.add('recording');
+      document.getElementById('mic-btn').innerText = '正在聆聽... (Listening)';
+      document.getElementById('status-box').innerText = '請說出項目與金額...';
+    };
+
+    recognition.onresult = (event) => {
+      processVoice(event.results[0][0].transcript);
+    };
+
+    recognition.onerror = () => stopMic();
+    recognition.onend = () => stopMic();
+  } else {
+    document.getElementById('mic-btn').style.display = 'none';
+  }
+
+  function toggleMic() {
+    if (!recognition) return;
+    if (isListening) recognition.stop();
+    else recognition.start();
+  }
+
+  function stopMic() {
+    isListening = false;
+    document.getElementById('mic-btn').classList.remove('recording');
+    document.getElementById('mic-btn').innerText = '🎙️ 點擊語音記帳 (Tap to Speak)';
+  }
+
+  function processVoice(text) {
+    stopMic();
+    const numMatches = text.match(/\d+/g);
+    let amount = 0;
+    let item = text;
+
+    if (numMatches && numMatches.length > 0) {
+      amount = parseInt(numMatches[numMatches.length - 1], 10);
+      item = text.replace(amount.toString(), '').trim();
+    }
+
+    // 預設分類
+    const catList = savedCategories[account][type];
+    const defaultCat = catList.includes("其他") ? "其他" : catList[0];
+    if (!item) item = defaultCat;
+
+    records.push({
+      id: Date.now(), account, type, 
+      category: defaultCat, item: item, amount: amount, 
+      date: getLocalYMD()
+    });
+    
+    saveRecords();
+    if (navigator.vibrate) navigator.vibrate(50);
+    document.getElementById('status-box').innerText = `✅ 語音新增: ${item} $${amount}`;
+    render();
+  }
+
+  // --- 手動輸入與分類管理 ---
+  function updateCategoryDropdown(selectId, selectedValue = '') {
+    const selectEl = document.getElementById(selectId);
+    const catList = savedCategories[account][type];
+    
+    selectEl.innerHTML = catList.map(c => `<option value="${c}">${c}</option>`).join('');
+    selectEl.innerHTML += `<option value="ADD_NEW" style="color:var(--matte-gold); font-weight:bold;">[ + 新增自訂分類 ]</option>`;
+    
+    if (selectedValue && catList.includes(selectedValue)) {
+      selectEl.value = selectedValue;
+    } else {
+      selectEl.value = catList[0];
+    }
+  }
+
+  function checkCustomCategory(selectId) {
+    const selectEl = document.getElementById(selectId);
+    if (selectEl.value === 'ADD_NEW') {
+      const newCat = prompt("請輸入新的分類名稱:");
+      if (newCat && newCat.trim() !== '') {
+        savedCategories[account][type].push(newCat.trim());
+        localStorage.setItem('luxury_categories', JSON.stringify(savedCategories));
+        updateCategoryDropdown('add-cat', newCat.trim());
+        updateCategoryDropdown('edit-cat', newCat.trim());
+      } else {
+        updateCategoryDropdown(selectId); // reset to default
+      }
+    }
+  }
+
+  function addManualRecord() {
+    const date = document.getElementById('add-date').value || getLocalYMD();
+    const cat = document.getElementById('add-cat').value;
+    let item = document.getElementById('add-item').value.trim();
+    const amt = parseInt(document.getElementById('add-amt').value, 10);
+    
+    if (!amt) {
+      alert("請輸入金額");
+      return;
+    }
+    if (!item) item = cat;
+
+    records.push({
+      id: Date.now(), account, type, category: cat, item, amount: amt, date
+    });
+
+    saveRecords();
+    document.getElementById('add-item').value = '';
+    document.getElementById('add-amt').value = '';
+    document.getElementById('status-box').innerText = `✅ 手動新增: ${item} $${amt}`;
+    render();
+  }
+
+  // --- 狀態切換 ---
+  function setAccount(acc) {
+    account = acc;
+    document.getElementById('tab-studio').className = 'tab-btn ' + (acc==='Studio'?'active-acc':'');
+    document.getElementById('tab-personal').className = 'tab-btn ' + (acc==='Personal'?'active-acc':'');
+    document.getElementById('acc-display').innerText = acc;
+    updateCategoryDropdown('add-cat');
+    render();
+  }
+
+  function setType(t) {
+    type = t;
+    document.getElementById('tab-expense').className = 'tab-btn ' + (t==='expense'?'active-exp':'');
+    document.getElementById('tab-income').className = 'tab-btn ' + (t==='income'?'active-inc':'');
+    updateCategoryDropdown('add-cat');
+    render();
+  }
+
+  // --- 編輯與刪除 ---
+  function openEditModal(id) {
+    const r = records.find(x => x.id === id);
+    if(!r) return;
+    
+    document.getElementById('edit-id').value = r.id;
+    document.getElementById('edit-date').value = r.date;
+    updateCategoryDropdown('edit-cat', r.category);
+    document.getElementById('edit-item').value = r.item;
+    document.getElementById('edit-amt').value = r.amount;
+    
+    document.getElementById('edit-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('edit-modal').style.display = 'none';
+  }
+
+  function saveEdit() {
+    const id = parseInt(document.getElementById('edit-id').value, 10);
+    const rIndex = records.findIndex(x => x.id === id);
+    if(rIndex > -1) {
+      records[rIndex].date = document.getElementById('edit-date').value;
+      records[rIndex].category = document.getElementById('edit-cat').value;
+      records[rIndex].item = document.getElementById('edit-item').value || records[rIndex].category;
+      records[rIndex].amount = parseInt(document.getElementById('edit-amt').value, 10) || 0;
+      saveRecords();
+      closeModal();
+      render();
+    }
+  }
+
+  function deleteRecord() {
+    const id = parseInt(document.getElementById('edit-id').value, 10);
+    if(confirm("確定要刪除這筆紀錄嗎？")) {
+      records = records.filter(x => x.id !== id);
+      saveRecords();
+      closeModal();
+      render();
+    }
+  }
+
+  function saveRecords() {
+    localStorage.setItem('luxury_records_v2', JSON.stringify(records));
+  }
+
+  // --- 畫面渲染 ---
+  function render() {
+    const d = new Date();
+    document.getElementById('month-display').innerText = `${d.getMonth()+1}月`;
+
+    // 篩選出「當前帳戶」且「當前月份」的所有紀錄 (不分收支，算總數用)
+    const currentMonthRecords = records.filter(r => r.account === account && r.date.startsWith(currentMonth));
+    
+    let totalInc = 0, totalExp = 0;
+    currentMonthRecords.forEach(r => {
+      if (r.type === 'income') totalInc += r.amount;
+      else totalExp += r.amount;
+    });
+    
+    document.getElementById('total-inc').innerText = '$' + totalInc.toLocaleString();
+    document.getElementById('total-exp').innerText = '$' + totalExp.toLocaleString();
+
+    // 篩選出目前 Tab (支出/收入) 的當月紀錄，用作列表與排行
+    const tabRecords = currentMonthRecords.filter(r => r.type === type);
+    
+    // 1. 渲染分類排行 (Category Breakdown)
+    const catMap = {};
+    tabRecords.forEach(r => {
+      catMap[r.category] = (catMap[r.category] || 0) + r.amount;
+    });
+    
+    const sortedCats = Object.keys(catMap).map(k => ({ cat: k, amt: catMap[k] })).sort((a,b) => b.amt - a.amt);
+    const maxCatAmt = sortedCats.length > 0 ? sortedCats[0].amt : 1;
+    
+    const catBreakdownEl = document.getElementById('cat-breakdown');
+    if (sortedCats.length === 0) {
+      catBreakdownEl.innerHTML = '<div style="text-align:center; color:#999; padding:10px;">尚無紀錄</div>';
+    } else {
+      catBreakdownEl.innerHTML = sortedCats.map(c => `
+        <div class="cat-item">
+          <div style="width:100%;">
+            <div style="display:flex; justify-content:space-between;">
+              <strong style="color:var(--deep-sage)">${c.cat}</strong>
+              <span style="font-weight:bold;">$${c.amt.toLocaleString()}</span>
             </div>
-            <div class="form-group">
-                <label>分類</label>
-                <select id="category"></select>
+            <div class="cat-bar-bg">
+              <div class="cat-bar-fill" style="width:${(c.amt / maxCatAmt)*100}%"></div>
             </div>
+          </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>項目名稱</label>
-                <input type="text" id="name" placeholder="例：午餐 / 租金">
+      `).join('');
+    }
+
+    // 2. 渲染紀錄列表 (按日期排序，新到舊)
+    const listEl = document.getElementById('record-list');
+    tabRecords.sort((a,b) => new Date(b.date) - new Date(a.date));
+    
+    if (tabRecords.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">本月無相關紀錄</div>';
+    } else {
+      listEl.innerHTML = tabRecords.map(r => `
+        <li class="list-item" onclick="openEditModal(${r.id})">
+          <div>
+            <div>
+              <span class="item-tag">${r.category}</span>
+              <strong style="color:var(--text-dark)">${r.item}</strong> 
             </div>
-            <div class="form-group">
-                <label>金額 ($)</label>
-                <input type="number" id="amount" placeholder="0">
-            </div>
-        </div>
-        <button id="manualSave" class="save-btn" onclick="saveRecord()">儲存紀錄</button>
-    </div>
+            <div class="item-date">${r.date}</div>
+          </div>
+          <div style="font-weight:bold; font-size:16px; color:${r.type==='income'?'var(--income-green)':'var(--expense-red)'}">
+            ${r.type==='income'?'+':'-'}$${r.amount.toLocaleString()}
+          </div>
+        </li>
+      `).join('');
+    }
+  }
 
-    <div class="logs">
-        <h3 id="listTitle" style="font-size: 16px; margin-bottom: 10px;">🏠 個人帳戶紀錄</h3>
-        <div id="logList"></div>
-    </div>
-
-    <script>
-        const categories = {
-            personal: {
-                expense: ['餐飲飲食', '交通出行', '日常購物', '社交 / 娛樂', '固定賬單 / 訂閱', '其他個人開支'],
-                income: ['固定薪金 / 本職', '投資回報', '其他個人收入']
-            },
-            studio: {
-                expense: ['場地租金 / 供樓', '教具 / 儀器採購', '推廣 / 宣傳費用', '進修 / 證書費用', '營運雜費'],
-                income: ['工作坊收入', '一對一服務', '導師培訓收入', '外聘 / 商業合作', '其他工作室收入']
-            }
-        };
-
-        const autoKeywords = {
-            'studio': { account: 'studio', type: '支出', cat: '場地租金 / 供樓' },
-            'rent': { account: 'studio', type: '支出', cat: '場地租金 / 供樓' },
-            '租金': { account: 'studio', type: '支出', cat: '場地租金 / 供樓' },
-            'ads': { account: 'studio', type: '支出', cat: '推廣 / 宣傳費用' },
-            '廣告': { account: 'studio', type: '支出', cat: '推廣 / 宣傳費用' },
-            'ttc': { account: 'studio', type: '收入', cat: '導師培訓收入' },
-            '工作坊': { account: 'studio', type: '收入', cat: '工作坊收入' },
-            '私教': { account: 'studio', type: '收入', cat: '一對一服務' },
-            'coffee': { account: 'personal', type: '支出', cat: '餐飲飲食' },
-            '午餐': { account: 'personal', type: '支出', cat: '餐飲飲食' },
-            'uber': { account: 'personal', type: '支出', cat: '交通出行' }
-        };
-
-        let currentAccount = 'personal';
-        let records = JSON.parse(localStorage.getItem('accounting_records')) || { personal: [], studio: [] };
-
-        window.onload = () => {
-            updateCategoryOptions();
-            renderLogs();
-        };
-
-        function switchAccount(acc) {
-            currentAccount = acc;
-            document.getElementById('btnPersonal').classList.toggle('active', acc === 'personal');
-            document.getElementById('btnStudio').classList.toggle('active', acc === 'studio');
-            document.getElementById('listTitle').innerText = acc === 'personal' ? '🏠 個人帳戶紀錄' : '🏢 Studio 帳戶紀錄';
-            updateCategoryOptions();
-            renderLogs();
-        }
-
-        function updateCategoryOptions() {
-            const type = document.getElementById('type').value === '收入' ? 'income' : 'expense';
-            const catSelect = document.getElementById('category');
-            catSelect.innerHTML = '';
-            categories[currentAccount][type].forEach(cat => {
-                const opt = document.createElement('option');
-                opt.value = cat;
-                opt.innerText = cat;
-                catSelect.appendChild(opt);
-            });
-        }
-
-        // 語音識別升級邏輯
-        const micBtn = document.getElementById('micBtn');
-        const status = document.getElementById('status');
-        const transcript = document.getElementById('transcript');
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'zh-HK'; 
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            micBtn.addEventListener('click', () => {
-                try {
-                    recognition.start();
-                    micBtn.classList.add('listening');
-                    status.innerText = "正在聆聽中，請說話...";
-                } catch (e) {
-                    status.innerText = "語音啟動中，請再按一次";
-                }
-            });
-
-            recognition.onresult = (e) => {
-                micBtn.classList.remove('listening');
-                status.innerText = "識別完成";
-                const text = e.results[0][0].transcript;
-                transcript.innerText = `「${text}」`;
-                parseVoiceCommand(text);
-            };
-
-            // 詳細錯誤原因回報
-            recognition.onerror = (e) => {
-                micBtn.classList.remove('listening');
-                if (e.error === 'not-allowed') {
-                    status.innerText = "❌ 失敗：請在手機設定中允許麥克風權限";
-                } else if (e.error === 'no-speech') {
-                    status.innerText = "❌ 未檢測到聲音，請再試一次";
-                } else if (e.error === 'network') {
-                    status.innerText = "❌ 網絡連線問題，請確保已連網";
-                } else {
-                    status.innerText = "❌ 識別失敗 (" + e.error + ")";
-                }
-            };
-
-            recognition.onend = () => micBtn.classList.remove('listening');
-        } else {
-            status.innerText = "此瀏覽器不支援 Web Speech API，請用 Chrome 開啟";
-            micBtn.disabled = true;
-        }
-
-        function parseVoiceCommand(text) {
-            let cleanText = text.replace(/[，,。.！!]/g, ' ');
-            let lowerText = cleanText.toLowerCase();
-
-            if (lowerText.includes('studio') || lowerText.includes('工作室') || lowerText.includes('公事')) {
-                switchAccount('studio');
-            }
-
-            const isIncome = lowerText.includes('收入');
-            document.getElementById('type').value = isIncome ? '收入' : '支出';
-            updateCategoryOptions();
-
-            let numbers = cleanText.match(/\d+/g);
-            if (numbers) {
-                document.getElementById('amount').value = numbers[numbers.length - 1];
-            }
-
-            let detected = false;
-            for (let key in autoKeywords) {
-                if (lowerText.includes(key)) {
-                    const info = autoKeywords[key];
-                    if (!lowerText.includes('個人') && !lowerText.includes('studio') && !lowerText.includes('工作室')) {
-                        switchAccount(info.account);
-                    }
-                    document.getElementById('type').value = info.type;
-                    updateCategoryOptions();
-                    document.getElementById('category').value = info.cat;
-                    document.getElementById('name').value = key;
-                    detected = true;
-                    break;
-                }
-            }
-
-            if (!detected) {
-                let parts = cleanText.split(/\s+/).filter(w => 
-                    !['新增', '支出', '收入', 'save', '儲存', '工作室', '個人', 'studio'].includes(w.toLowerCase()) && !/^\d+$/.test(w)
-                );
-                if (parts.length > 0) document.getElementById('name').value = parts[0];
-            }
-
-            if (lowerText.includes('save') || lowerText.includes('儲存')) {
-                saveRecord();
-            }
-        }
-
-        function saveRecord() {
-            const name = document.getElementById('name').value.trim() || '未命名';
-            const category = document.getElementById('category').value;
-            const type = document.getElementById('type').value;
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
-
-            if (amount <= 0) {
-                alert('請輸入有效金額');
-                return;
-            }
-
-            const record = {
-                id: Date.now(),
-                name,
-                category,
-                type,
-                amount,
-                date: new Date().toLocaleDateString([], { month: '2-digit', day: '2-digit' }),
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            records[currentAccount].unshift(record);
-            localStorage.setItem('accounting_records', JSON.stringify(records));
-
-            document.getElementById('name').value = '';
-            document.getElementById('amount').value = '';
-            status.innerText = "已成功儲存！";
-
-            renderLogs();
-        }
-
-        function deleteRecord(id) {
-            records[currentAccount] = records[currentAccount].filter(r => r.id !== id);
-            localStorage.setItem('accounting_records', JSON.stringify(records));
-            renderLogs();
-        }
-
-        function renderLogs() {
-            const logList = document.getElementById('logList');
-            logList.innerHTML = '';
-
-            let totalIn = 0;
-            let totalOut = 0;
-
-            const list = records[currentAccount];
-
-            list.forEach(r => {
-                if (r.type === '收入') totalIn += r.amount;
-                else totalOut += r.amount;
-
-                const item = document.createElement('div');
-                item.className = 'log-item';
-                const isExpense = r.type === '支出';
-
-                item.innerHTML = `
-                    <div class="log-info">
-                        <strong>${r.name}</strong>
-                        <small>${r.category} • ${r.date} ${r.time}</small>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="${isExpense ? 'expense-num' : 'income-num'}">
-                            ${isExpense ? '-' : '+'}$${r.amount}
-                        </div>
-                        <small style="color:#ff3b30; cursor:pointer;" onclick="deleteRecord(${r.id})">刪除</small>
-                    </div>
-                `;
-                logList.appendChild(item);
-            });
-
-            document.getElementById('totalIncome').innerText = `$${totalIn}`;
-            document.getElementById('totalExpense').innerText = `$${totalOut}`;
-            const net = totalIn - totalOut;
-            const netEl = document.getElementById('netBalance');
-            netEl.innerText = `$${net}`;
-            netEl.style.color = net >= 0 ? '#30d158' : '#ff453a';
-        }
-    </script>
+  // 初始化
+  updateCategoryDropdown('add-cat');
+  render();
+</script>
 </body>
 </html>
