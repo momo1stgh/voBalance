@@ -157,7 +157,27 @@
 <script>
   let account = 'Studio';
   let type = 'expense';
-  let records = JSON.parse(localStorage.getItem('luxury_records_v3') || '[]');
+
+  // 永久固定名稱，防止以後更新又清空資料
+  const STORAGE_KEY = 'luxury_tracker_master_data';
+  const CATEGORY_KEY = 'luxury_tracker_master_categories';
+
+  // 自動拯救舊版本的資料（如果有的話）
+  let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  if (records.length === 0) {
+    ['luxury_records_v3', 'luxury_records_v2', 'luxury_records'].forEach(oldKey => {
+      const oldData = localStorage.getItem(oldKey);
+      if (oldData) {
+        try {
+          const parsed = JSON.parse(oldData);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            records = parsed;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          }
+        } catch(e){}
+      }
+    });
+  }
   
   const defaultCategories = {
     Personal: {
@@ -170,10 +190,10 @@
     }
   };
   
-  let savedCategories = JSON.parse(localStorage.getItem('luxury_categories_v3'));
+  let savedCategories = JSON.parse(localStorage.getItem(CATEGORY_KEY));
   if (!savedCategories) {
     savedCategories = defaultCategories;
-    localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
+    localStorage.setItem(CATEGORY_KEY, JSON.stringify(savedCategories));
   }
 
   function getLocalYMD() {
@@ -210,7 +230,7 @@
       const newCat = prompt("請輸入新的分類名稱:");
       if (newCat && newCat.trim() !== '') {
         savedCategories[account][type].push(newCat.trim());
-        localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
+        localStorage.setItem(CATEGORY_KEY, JSON.stringify(savedCategories));
         updateCategoryDropdown('add-cat', newCat.trim());
         updateCategoryDropdown('edit-cat', newCat.trim());
       } else {
@@ -301,10 +321,9 @@
   }
 
   function saveRecords() {
-    localStorage.setItem('luxury_records_v3', JSON.stringify(records));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   }
 
-  // --- 分類排序功能 ---
   function openSortModal() {
     const container = document.getElementById('sort-list-container');
     const catList = savedCategories[account][type];
@@ -331,18 +350,17 @@
       const temp = catList[index];
       catList[index] = catList[newIndex];
       catList[newIndex] = temp;
-      openSortModal(); // 重新整理排序視窗
+      openSortModal();
     }
   }
 
   function saveSortOrder() {
-    localStorage.setItem('luxury_categories_v3', JSON.stringify(savedCategories));
+    localStorage.setItem(CATEGORY_KEY, JSON.stringify(savedCategories));
     closeSortModal();
     updateCategoryDropdown('add-cat');
     render();
   }
 
-  // --- 畫布圓餅圖繪製 ---
   function drawPieChart(dataMap) {
     const canvas = document.getElementById('pieChart');
     const ctx = canvas.getContext('2d');
@@ -393,7 +411,6 @@
 
     const tabRecords = currentMonthRecords.filter(r => r.type === type);
     
-    // 按照自訂順序排列分類金額
     const catMap = {};
     savedCategories[account][type].forEach(c => { catMap[c] = 0; });
     
@@ -401,11 +418,10 @@
       if (catMap[r.category] !== undefined) {
         catMap[r.category] += r.amount;
       } else {
-        catMap[r.category] = r.amount; // 應對自訂分類
+        catMap[r.category] = r.amount;
       }
     });
 
-    // 濾除金額為 0 的分類供圓餅圖使用（保持排序）
     const activeDataMap = {};
     Object.keys(catMap).forEach(k => {
       if (catMap[k] > 0) activeDataMap[k] = catMap[k];
@@ -413,7 +429,6 @@
 
     drawPieChart(activeDataMap);
 
-    // 渲染圖例與數值
     const legendEl = document.getElementById('chart-legend');
     const activeKeys = Object.keys(activeDataMap);
     if (activeKeys.length === 0) {
@@ -432,7 +447,6 @@
       }).join('');
     }
 
-    // 渲染紀錄列表
     const listEl = document.getElementById('record-list');
     tabRecords.sort((a,b) => new Date(b.date) - new Date(a.date));
     
