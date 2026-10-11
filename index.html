@@ -7,7 +7,6 @@
   <style>
     :root {
       --sage-green: #1D5D5D;
-      --deep-sage: #3B4A39;
       --matte-gold: #C5A059;
       --soft-bg: #F4F6F3;
       --card-bg: #FFFFFF;
@@ -18,47 +17,39 @@
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--soft-bg); margin: 0; padding: 16px; color: #2A3229; padding-bottom: 80px; }
     .container { max-width: 480px; margin: 0 auto; }
-    
     h2 { text-align: center; margin: 0 0 18px 0; color: var(--sage-green); font-size: 22px; }
     
-    /* Tabs */
     .tab-group { display: flex; gap: 8px; margin-bottom: 12px; }
-    .tab-btn { flex: 1; padding: 12px; border: none; background: #EAECE8; color: #666; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .tab-btn { flex: 1; padding: 12px; border: none; background: #EAECE8; color: #666; border-radius: 12px; font-weight: bold; cursor: pointer; }
     .tab-btn.active-acc { background: var(--sage-green); color: #fff; }
     .tab-btn.active-exp { background: var(--expense-red); color: #fff; }
     .tab-btn.active-inc { background: var(--income-green); color: #fff; }
 
-    /* Summary Card */
     .card { background: linear-gradient(135deg, var(--sage-green), #113636); color: #fff; padding: 20px; border-radius: 20px; margin-bottom: 18px; border-left: 6px solid var(--matte-gold); text-align: center; box-shadow: 0 8px 20px rgba(29,93,93,0.15); }
     .summary-grid { display: flex; justify-content: space-around; margin-top: 10px; }
     .summary-val { font-size: 20px; font-weight: bold; }
     
-    .status { text-align: center; font-size: 14px; color: #555; padding: 10px; background: #EFEFEF; border-radius: 12px; margin-bottom: 16px; }
+    .status { text-align: center; font-size: 13px; color: #333; padding: 8px; background: #E2ECE9; border-radius: 10px; margin-bottom: 16px; font-weight: bold; }
 
-    /* Manual Input Form */
-    .manual-box { background: var(--card-bg); padding: 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border-light); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .manual-box { background: var(--card-bg); padding: 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border-light); }
     .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .input-row input, .input-row select { flex: 1; padding: 10px; border: 1px solid #CCC; border-radius: 10px; font-size: 14px; background: #FFF; color: #333; }
     .add-btn { width: 100%; padding: 12px; background: var(--sage-green); color: #FFF; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
 
-    /* Section Titles */
     h3 { font-size: 16px; color: var(--sage-green); border-bottom: 2px solid var(--matte-gold); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .settings-btn { font-size: 12px; background: #EAECE8; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; color: #444; }
 
-    /* Chart Area */
     .chart-container { background: var(--card-bg); border-radius: 16px; padding: 16px; border: 1px solid var(--border-light); margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .chart-legend { width: 100%; display: flex; flex-direction: column; gap: 6px; }
     .legend-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; border-bottom: 1px solid #F5F5F5; }
     .legend-color { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 6px; }
 
-    /* Record List */
     .list { list-style: none; padding: 0; margin: 0; background: var(--card-bg); border-radius: 16px; padding: 10px; border: 1px solid var(--border-light); }
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0; cursor: pointer; }
     .list-item:last-child { border-bottom: none; }
     .item-tag { font-size: 11px; background: #EAECE8; padding: 3px 8px; border-radius: 8px; color: #555; margin-right: 6px; }
     .item-date { font-size: 12px; color: #999; margin-top: 4px; }
     
-    /* Modal */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
     .modal-content { background: #FFF; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
     .modal-title { font-size: 18px; font-weight: bold; color: var(--sage-green); margin-bottom: 16px; text-align: center; }
@@ -67,7 +58,6 @@
     .btn-save { background: var(--sage-green); color: #FFF; }
     .btn-cancel { background: #EAECE8; color: #555; }
     .btn-delete { background: var(--expense-red); color: #FFF; margin-top: 10px; width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    
     .sortable-item { display: flex; align-items: center; justify-content: space-between; background: #F9F9F9; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #EAECE8; }
     .sortable-btns button { background: #EAECE8; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; }
   </style>
@@ -87,16 +77,15 @@
   </div>
 
   <div class="card">
-    <div style="font-size: 13px; opacity: 0.8;">當前帳戶: <span id="acc-display">Studio</span> (<span id="month-display">本月</span>)</div>
+    <div style="font-size: 13px; opacity: 0.8;">當前帳戶: <span id="acc-display">Studio</span> (全部紀錄總覽)</div>
     <div class="summary-grid">
       <div>總收入<br><span class="summary-val" style="color:var(--income-green)" id="total-inc">$0.00</span></div>
       <div>總開支<br><span class="summary-val" style="color:var(--expense-red)" id="total-exp">$0.00</span></div>
     </div>
   </div>
 
-  <div class="status" id="status-box">請在下方手動輸入紀錄</div>
+  <div class="status" id="status-box">系統初始化正常</div>
 
-  <!-- 手動輸入區塊 -->
   <div class="manual-box">
     <div class="input-row">
       <input type="date" id="add-date">
@@ -109,9 +98,8 @@
     <button class="add-btn" onclick="addManualRecord()">新增紀錄</button>
   </div>
 
-  <!-- 當月分類圓餅圖 -->
   <h3>
-    <span>📊 當月分類比例</span>
+    <span>📊 分類比例</span>
     <button class="settings-btn" onclick="openSortModal()">⚙️ 排序分類</button>
   </h3>
   <div class="chart-container">
@@ -119,12 +107,10 @@
     <div class="chart-legend" id="chart-legend"></div>
   </div>
 
-  <!-- 當月列表 -->
-  <h3>📝 當月紀錄 <span style="font-size:12px; font-weight:normal; color:#888;">點擊可編輯</span></h3>
+  <h3>📝 所有紀錄 <span style="font-size:12px; font-weight:normal; color:#888;">點擊可編輯</span></h3>
   <ul class="list" id="record-list"></ul>
 </div>
 
-<!-- 編輯視窗 -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal-content">
     <div class="modal-title">編輯紀錄</div>
@@ -133,7 +119,6 @@
     <div class="input-row"><select id="edit-cat" onchange="checkCustomCategory('edit-cat')"></select></div>
     <div class="input-row"><input type="text" id="edit-item" placeholder="項目名稱"></div>
     <div class="input-row"><input type="number" id="edit-amt" placeholder="金額 $" step="0.01"></div>
-    
     <div class="modal-btn-group">
       <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
       <button class="modal-btn btn-save" onclick="saveEdit()">儲存</button>
@@ -142,7 +127,6 @@
   </div>
 </div>
 
-<!-- 分類排序視窗 -->
 <div class="modal-overlay" id="sort-modal">
   <div class="modal-content">
     <div class="modal-title">調整分類排序</div>
@@ -158,19 +142,29 @@
   let account = 'Studio';
   let type = 'expense';
 
-  // 永久固定名稱，防止以後更新又清空資料
-  const STORAGE_KEY = 'luxury_tracker_master_data';
-  const CATEGORY_KEY = 'luxury_tracker_master_categories';
+  // 唯一固定 Key，從今以後絕不更改
+  const STORAGE_KEY = 'luxury_tracker_v5_master';
+  const CATEGORY_KEY = 'luxury_tracker_v5_categories';
 
-  // 自動拯救舊版本的資料（如果有的話）
-  let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let records = [];
+  try {
+    const rawData = localStorage.getItem(STORAGE_KEY);
+    if (rawData) {
+      records = JSON.parse(rawData) || [];
+    }
+  } catch(e) {
+    records = [];
+  }
+
+  // 單次性自動回收舊垃圾資料（只做這一次，之後全部統一歸納）
   if (records.length === 0) {
-    ['luxury_records_v3', 'luxury_records_v2', 'luxury_records'].forEach(oldKey => {
-      const oldData = localStorage.getItem(oldKey);
-      if (oldData) {
+    ['luxury_tracker_master_data_v4', 'luxury_tracker_master_data', 'luxury_records_v3', 'luxury_records_v2'].forEach(k => {
+      const old = localStorage.getItem(k);
+      if (old) {
         try {
-          const parsed = JSON.parse(oldData);
+          const parsed = JSON.parse(old);
           if (Array.isArray(parsed) && parsed.length > 0) {
+            // 合併去重
             records = parsed;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
           }
@@ -178,7 +172,7 @@
       }
     });
   }
-  
+
   const defaultCategories = {
     Personal: {
       expense: ["飲食", "糧儲", "家居", "營運", "交通", "購物-衣", "購物-物質", "購物-送禮", "學習/進修", "保險/投資", "家用", "其他"],
@@ -186,11 +180,14 @@
     },
     Studio: {
       expense: ["場地租金", "營運", "Tools", "行銷", "其他"],
-      income: ["yoga", "sound", "workshops", "其他"]
+      income: ["yoga", "sound", "workshops", "other"]
     }
   };
-  
-  let savedCategories = JSON.parse(localStorage.getItem(CATEGORY_KEY));
+
+  let savedCategories;
+  try {
+    savedCategories = JSON.parse(localStorage.getItem(CATEGORY_KEY));
+  } catch(e) {}
   if (!savedCategories) {
     savedCategories = defaultCategories;
     localStorage.setItem(CATEGORY_KEY, JSON.stringify(savedCategories));
@@ -201,8 +198,7 @@
     const offset = d.getTimezoneOffset() * 60000;
     return new Date(d.getTime() - offset).toISOString().split('T')[0];
   }
-  
-  const currentMonth = getLocalYMD().substring(0, 7);
+
   document.getElementById('add-date').value = getLocalYMD();
 
   const chartColors = [
@@ -213,10 +209,8 @@
   function updateCategoryDropdown(selectId, selectedValue = '') {
     const selectEl = document.getElementById(selectId);
     const catList = savedCategories[account][type];
-    
     selectEl.innerHTML = catList.map(c => `<option value="${c}">${c}</option>`).join('');
     selectEl.innerHTML += `<option value="ADD_NEW" style="color:var(--matte-gold); font-weight:bold;">[ + 新增自訂分類 ]</option>`;
-    
     if (selectedValue && catList.includes(selectedValue)) {
       selectEl.value = selectedValue;
     } else {
@@ -239,6 +233,14 @@
     }
   }
 
+  function saveRecords() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch(e) {
+      alert("儲存失敗：瀏覽器容量受限");
+    }
+  }
+
   function addManualRecord() {
     const date = document.getElementById('add-date').value || getLocalYMD();
     const cat = document.getElementById('add-cat').value;
@@ -258,7 +260,6 @@
     saveRecords();
     document.getElementById('add-item').value = '';
     document.getElementById('add-amt').value = '';
-    document.getElementById('status-box').innerText = `✅ 新增成功: ${item} $${amt.toFixed(2)}`;
     render();
   }
 
@@ -282,13 +283,11 @@
   function openEditModal(id) {
     const r = records.find(x => x.id === id);
     if(!r) return;
-    
     document.getElementById('edit-id').value = r.id;
     document.getElementById('edit-date').value = r.date;
     updateCategoryDropdown('edit-cat', r.category);
     document.getElementById('edit-item').value = r.item;
     document.getElementById('edit-amt').value = r.amount;
-    
     document.getElementById('edit-modal').style.display = 'flex';
   }
 
@@ -318,10 +317,6 @@
       closeModal();
       render();
     }
-  }
-
-  function saveRecords() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   }
 
   function openSortModal() {
@@ -395,13 +390,13 @@
   }
 
   function render() {
-    const d = new Date();
-    document.getElementById('month-display').innerText = `${d.getMonth()+1}月`;
+    const totalCount = records.length;
+    document.getElementById('status-box').innerText = `💡 狀態提示：目前系統已儲存共 ${totalCount} 筆紀錄`;
 
-    const currentMonthRecords = records.filter(r => r.account === account && r.date.startsWith(currentMonth));
+    const accountRecords = records.filter(r => r.account === account);
     
     let totalInc = 0, totalExp = 0;
-    currentMonthRecords.forEach(r => {
+    accountRecords.forEach(r => {
       if (r.type === 'income') totalInc += r.amount;
       else totalExp += r.amount;
     });
@@ -409,7 +404,7 @@
     document.getElementById('total-inc').innerText = '$' + totalInc.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     document.getElementById('total-exp').innerText = '$' + totalExp.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    const tabRecords = currentMonthRecords.filter(r => r.type === type);
+    const tabRecords = accountRecords.filter(r => r.type === type);
     
     const catMap = {};
     savedCategories[account][type].forEach(c => { catMap[c] = 0; });
@@ -432,7 +427,7 @@
     const legendEl = document.getElementById('chart-legend');
     const activeKeys = Object.keys(activeDataMap);
     if (activeKeys.length === 0) {
-      legendEl.innerHTML = '<div style="text-align:center; color:#999; padding:5px;">本月尚無分類數據</div>';
+      legendEl.innerHTML = '<div style="text-align:center; color:#999; padding:5px;">目前尚無分類數據</div>';
     } else {
       let colorIdx = 0;
       legendEl.innerHTML = activeKeys.map(k => {
@@ -451,7 +446,7 @@
     tabRecords.sort((a,b) => new Date(b.date) - new Date(a.date));
     
     if (tabRecords.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">本月無相關紀錄</div>';
+      listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">目前無相關紀錄</div>';
     } else {
       listEl.innerHTML = tabRecords.map(r => `
         <li class="list-item" onclick="openEditModal(${r.id})">
